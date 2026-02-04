@@ -4,6 +4,36 @@
 //
 
 //
+// Prelude to Date - what's time zone
+//
+
+// Before we dive deep into Date, let's firstly talk about time zone - what the hell is it?
+// Let's focus on real world as example
+// In real world, the time isn't same everywhere
+// For example, when it's 12:00 (noon) in London, it's already 7:00 in New York, USA, and 13:00 in Prague, Czechia
+// This is because of time zones - the Earth is divided into different time zones based on longitude
+// TLDR: different part of our planet has different time (thus time zones)
+
+// Now, to make sense and standardize this, there is a concept of UTC - Coordinated Universal Time
+// This is essentially the "base" of time zones
+// All time zones are defined as an offset from UTC
+// For example:
+// - London is usually UTC+0 - plus 0 hours - same as UTC
+// - New York is usually UTC-5 - minus 5 hours from UTC
+// - Prague is usually UTC+1 - plus 1 hour from UTC
+// TLDR: UTC is the base time, other time zones are defined as offsets from it
+
+// Note: Many time zones also have Daylight Saving Time (DST) - where the clocks are adjusted forward or backward by one hour during certain periods of the year
+// But we don't need to go into details of this now
+
+// To sum up the time zone
+// Let's have an example of local date
+// - 1st January 2023, 12:00
+// To have this date represented in UTC, for the time zone plus 1, we need to subtract 1 hour
+// - 1st January 2023, 11:00 UTC
+// This is the default behavior of console.log - it uses UTC
+
+//
 // The Basics of Date
 //
 
@@ -11,7 +41,13 @@
 
 // Creating a new Date object is simple
 const now = new Date(); // This creates a new Date object which represent the current date and time - as of creation of the object
-console.log("Now default formatting", now); // We can also output it - it uses the default string representation
+console.log("Now", now); // We can also output it - it uses the default string representation
+// Let's use the knowledge of time zones right away - why does this output may differ from our clock on our computer?
+// It's because console log of date outputs the date in UTC
+// Because of time zone - for example if you are in Prague, which is UTC+1, the time in Prague is 1 hour ahead
+// To make this UTC, it has to be subtracted by 1 hour
+// That's why in Prague the printed date is one hour behind the actual local time
+// With this first caveat in mind, let's now focus on the date itself (as we now understand why it prints the date this way)
 
 // Before we dwelve deeper, into its methods and how to further use it, let's firstly understand one thing - what it really is
 // The Date object is internally just a wrapper around a number
@@ -234,3 +270,6 @@ console.log("Difference in days:", differenceInDays);
 
 // And this is how we can get difference between two dates - we need to use the timestamps, calculate the difference
 // We then need to convert the timestamp to our desired difference - like to days, hours, minutes, etc.
+
+
+
