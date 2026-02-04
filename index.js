@@ -134,3 +134,69 @@ console.log("Maybe very old date after setFullYear:", maybeVeryOldDate); // Now 
 // Let's try it
 const veryOldDate = new Date("0015-01-01T00:00:00Z");
 console.log("Very old date from ISO string UTC:", veryOldDate); // This works fine
+
+//
+// Date methods - AKA how to work with Date
+//
+
+// As we now know the basics of date, what is it comprised of, caveats and ways of creating it
+// We also would like to know how to work with it
+// We are in luck (or not maybe so much so) - as there are methods Date has
+
+/* Getting parts of the date */
+const sampleDate = new Date("2011-11-18T13:40:42.333Z"); // November 18, 2011 (the .333 is milliseconds part)
+
+// Getting year
+const year = sampleDate.getFullYear(); // 4 digit year
+console.log("Sample date Year:", year);
+// Getting month
+const month = sampleDate.getMonth(); // 0 indexed month (0 = January, 10 = November)
+console.log("Sample date Month (0 indexed):", month);
+// Getting day of month
+const day = sampleDate.getDate(); // Day of the month (1-31)
+console.log("Sample date Day of month:", day);
+// Getting date of week
+const dayOfWeek = sampleDate.getDay(); // Day of the week (0 = Sunday, 6 = Saturday)
+console.log("Sample date Day of week (0=Sunday):", dayOfWeek);
+// Getting hours
+const hours = sampleDate.getHours(); // Hours (0-23)
+console.log("Sample date Hours:", hours);
+// Getting minutes
+const minutes = sampleDate.getMinutes(); // Minutes (0-59)
+console.log("Sample date Minutes:", minutes);
+// Getting seconds
+const seconds = sampleDate.getSeconds(); // Seconds (0-59)
+console.log("Sample date Seconds:", seconds);
+// Getting milliseconds
+const milliseconds = sampleDate.getMilliseconds(); // Milliseconds (0-999)
+console.log("Sample date Milliseconds:", milliseconds);
+
+/* Setting parts of the date */
+
+// Each of the get methods has a corresponding set method (except the getDay() method, as day of week is derived from the date):
+
+// Setting year
+sampleDate.setFullYear(2020); // Sets the year to 2020
+console.log("Sample date after setting Year to 2020 UTC:", sampleDate);
+// Setting month
+sampleDate.setMonth(0); // Sets the month to January (0 indexed)
+console.log("Sample date after setting Month to January UTC:", sampleDate);
+// Setting day of month
+sampleDate.setDate(15); // Sets the day of the month to 15
+console.log("Sample date after setting Day of month to 15 UTC:", sampleDate);
+// Setting hours
+sampleDate.setHours(10); // Sets the hours to 10
+console.log("Sample date after setting Hours to 10 UTC:", sampleDate);
+// Setting minutes
+sampleDate.setMinutes(30); // Sets the minutes to 30
+console.log("Sample date after setting Minutes to 30 UTC:", sampleDate);
+// Setting seconds
+sampleDate.setSeconds(0); // Sets the seconds to 0
+console.log("Sample date after setting Seconds to 0 UTC:", sampleDate);
+// Setting milliseconds
+sampleDate.setMilliseconds(500); // Sets the milliseconds to 500
+console.log("Sample date after setting Milliseconds to 500 UTC:", sampleDate);
+
+
+
+
