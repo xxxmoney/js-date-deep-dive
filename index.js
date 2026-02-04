@@ -78,19 +78,23 @@ console.log("Date from timestamp:", dateFromTimestamp);
 // You can try creating timestamps using this site: https://www.epochconverter.com
 
 // 3: Creating a Date object from a date string
-// Important note - keep in mind dates logged into console might be a bit differnt - like differece of one hour - that's because of time zone - will be covered later (will mention this more times)
 // For this usage, it's important to understand that there are multiple formats of date strings
+// (Keep in mind there are different types of handling - some create a date in UTC, some in local time zone, etc.)
 // - Date formats are usually defined as follow YYYY for year, MM for month, DD for day, hh for hour, mm for minute, ss for second
 // - With this, we can "combine" these parts to create different formats, for example: "YYYY-MM-DD", "MM/DD/YYYY", "YYYY-MM-DDThh:mm:ss" (T is just the separator, Z means UTC time zone), etc.
 // My recommandation is the ISO 8601 format - YYYY-MM-DDThh:mm:ssZ
-const dateFromISOString = new Date("2001-11-09T14:46:00Z");
-console.log("Date from ISO string UTC:", dateFromISOString);
+// - The Z suffix is important - it says to use UTC
+const dateFromISO = new Date("2001-11-09T14:46:00Z");
+console.log("Date from ISO string UTC:", dateFromISO);
+// We could make a similar example without the Z - it would now use local tiem zone
+const dateFromISOWithoutZ = new Date("2001-11-09T14:46:00"); // This one uses local time zone of the environment
+console.log("Date from ISO string without Z (local time zone):", dateFromISOWithoutZ);
 // There is also the ISO 8601 date only format - YYYY-MM-DD - specified without time - uses midnight (00:00) as time
-const dateOnlyFromISOString = new Date("2021-11-09"); // This is treated similarly to the previous one, but it also has its caveats, to rather use the first one
-console.log("Date from YYYY-MM-DD string UTC:", dateOnlyFromISOString);
+const dateOnlyFromISO = new Date("2021-11-09"); // This is interesting because this format uses UTC
+console.log("Date from YYYY-MM-DD string UTC:", dateOnlyFromISO);
 // There are also other formats which may or may not work across browsers, for example YYYY-MM-DD, MM/DD/YYYY, etc.
-const dateFromUnreliableFormatString = new Date("11/09/2021"); // This one for example is not treated same as the ISO 8601 formats
-console.log("Date from another unreliable MM/DD/YYYY string:", dateFromUnreliableFormatString);
+const dateFromUnreliableFormat = new Date("11/09/2021"); // This format is NOT UTC, it uses local time zone
+console.log("Date from another unreliable MM/DD/YYYY string:", dateFromUnreliableFormat);
 
 // 4: Creating a Date from individual parts
 // - A great option - specifies the parts specifically
@@ -182,6 +186,8 @@ console.log("Very old date from ISO string UTC:", veryOldDate); // This works fi
 /* Getting parts of the date */
 const sampleDate = new Date("2011-11-18T13:40:42.333Z"); // November 18, 2011 (the .333 is milliseconds part)
 
+// Keep in mind these methods work in local time zone (UTC will be used in later sections):
+
 // Getting year
 const year = sampleDate.getFullYear(); // 4 digit year
 console.log("Sample date Year:", year);
@@ -272,4 +278,48 @@ console.log("Difference in days:", differenceInDays);
 // We then need to convert the timestamp to our desired difference - like to days, hours, minutes, etc.
 
 
+//
+// Working with time zones
+//
+
+// Now we now the ins and outs of Date, its methods, calculations, etc
+// But how about the time zone - in the beginning, we understood, what it is, but can we work with Date more efficiently regarding time zones?
+// Yes and No
+
+/* String representation */
+
+// As we know, the console.log by default uses UTC ISO Format representation
+// But we have more ways of getting string represenation of Date
+const nowAsLocalTimeString = now.toString();
+console.log("Now as local time string:", nowAsLocalTimeString); // This outputs the date in local time zone of the environment where the code is running, along with time zone itself
+const nowAsUTCString = now.toUTCString();
+console.log("Now as UTC string:", nowAsUTCString); // Also UTC, but different format
+const nowAsISOString = now.toISOString();
+console.log("Now as ISO string:", nowAsISOString); // This outputs the date in ISO 8601 format in UTC - basically the default console.log format
+
+/* Getting parts */
+
+// In some previous section, we got to know methods for getting parts of the date - hours, minutes, etc
+// These methods work in local time zone
+// We also have their UTC counterparts
+const sampleDate2 = new Date("2011-11-18T13:40:42.333Z"); // November 18, 2011 (the .333 is milliseconds part)
+// Getting year in UTC
+const yearUTC = sampleDate2.getUTCFullYear();
+console.log("Sample date Year UTC:", yearUTC);
+// Getting month in UTC
+const monthUTC = sampleDate2.getUTCMonth();
+// We could write the other ones here, but you get the idea...
+
+/* The time zone value itself */
+
+// Important thing - as mentioned, the Date itself is just a timestamp - it doesn't have time zone information in itself
+// The timestamp itself is always in UTC - it's the number of milliseconds since January 1, 1970, 00:00:00 UTC!
+// Meaning the timezone is not stored in Date - the browser uses the local time zone of the environment
+
+// We can get the timezone this way
+const timezoneOffsetInMinutes = now.getTimezoneOffset(); // This returns the time zone offset in minutes from UTC - but it's "backwards" - if we have UTC+1, it returns -60
+console.log("Timezone offset in minutes from UTC:", timezoneOffsetInMinutes); 
+// This essentially returns the difference between what we see in console.log and the actual local time - like in Prague, which is UTC+1 
+// - It returns -60, which means it subtracts 60 minutes (1 hour) to get the UTC time
+// - Which is what we see in console.log
 
