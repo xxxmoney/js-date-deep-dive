@@ -42,6 +42,7 @@ console.log("Date from timestamp:", dateFromTimestamp);
 // You can try creating timestamps using this site: https://www.epochconverter.com
 
 // 3: Creating a Date object from a date string
+// Important note - keep in mind dates logged into console might be a bit differnt - like differece of one hour - that's because of time zone - will be covered later (will mention this more times)
 // For this usage, it's important to understand that there are multiple formats of date strings
 // - Date formats are usually defined as follow YYYY for year, MM for month, DD for day, hh for hour, mm for minute, ss for second
 // - With this, we can "combine" these parts to create different formats, for example: "YYYY-MM-DD", "MM/DD/YYYY", "YYYY-MM-DDThh:mm:ss" (T is just the separator, Z means UTC time zone - on this later on), etc.
@@ -107,3 +108,29 @@ anotherOriginalDate.setFullYear(anotherOriginalDate.getFullYear() + 2); // Mutat
 console.log("Copy of another original date UTC:", copyOfAnotherOriginalDate); // And this stays the same because it's a new instance
 console.log("Copy of another original date (short creation version) UTC:", copyOfAnotherOriginalDateShorter); 
 
+/* Issues with old dates */
+
+// Now, as we know, the Date is interanlly just a Unit Timestampt - number of milliseconds since January 1, 1970, 00:00:00 UTC
+// Well, how can we then represent dates before this date?
+
+// Let's try what happens
+const oldDate = new Date(1945, 7, 6); // August 6, 1945
+console.log("Old date:", oldDate); // Interesting, this actually works, how?
+// Let's take a look at the timestamp
+const oldDateTimestamp = oldDate.getTime();
+console.log("Old date timestamp (ms since Unix Epoch):", oldDateTimestamp); // It's negative!
+// So the solution for represenation of dates before 1970 is simply using negative timestamps
+
+// This works fine, but let's try very historical dates
+const maybeVeryOldDate = new Date(15, 0, 1); // January 1, 0015
+console.log("Maybe very old date:", maybeVeryOldDate); // Huh, this looks wrong
+// This is an old feature - if the year is between 0 and 99, it's treated as 1900 + year
+
+// To fix this, we can use .setFullYear() method
+maybeVeryOldDate.setFullYear(15); // Set the full year to 15
+console.log("Maybe very old date after setFullYear:", maybeVeryOldDate); // Now it's correct
+
+// Btw, this would this issue could be fixed with using the string format and ISO format (but this is demonstration of the JavaScript issues and limitations)
+// Let's try it
+const veryOldDate = new Date("0015-01-01T00:00:00Z");
+console.log("Very old date from ISO string UTC:", veryOldDate); // This works fine
