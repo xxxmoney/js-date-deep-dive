@@ -45,7 +45,7 @@ console.log("Date from timestamp:", dateFromTimestamp);
 // Important note - keep in mind dates logged into console might be a bit differnt - like differece of one hour - that's because of time zone - will be covered later (will mention this more times)
 // For this usage, it's important to understand that there are multiple formats of date strings
 // - Date formats are usually defined as follow YYYY for year, MM for month, DD for day, hh for hour, mm for minute, ss for second
-// - With this, we can "combine" these parts to create different formats, for example: "YYYY-MM-DD", "MM/DD/YYYY", "YYYY-MM-DDThh:mm:ss" (T is just the separator, Z means UTC time zone - on this later on), etc.
+// - With this, we can "combine" these parts to create different formats, for example: "YYYY-MM-DD", "MM/DD/YYYY", "YYYY-MM-DDThh:mm:ss" (T is just the separator, Z means UTC time zone), etc.
 // My recommandation is the ISO 8601 format - YYYY-MM-DDThh:mm:ssZ
 const dateFromISOString = new Date("2001-11-09T14:46:00Z");
 console.log("Date from ISO string UTC:", dateFromISOString);
@@ -59,7 +59,7 @@ console.log("Date from another unreliable MM/DD/YYYY string:", dateFromUnreliabl
 // 4: Creating a Date from individual parts
 // - A great option - specifies the parts specifically
 const dateFromParts = new Date(2001, 10, 9, 14, 46, 0); // Year, Month, Day, Hour, Minute, Second. Note: Month is zero-based! (0 = January, 10 = November)
-console.log("Date from parts:", dateFromParts); // You might notice it might actually be a bit differnet then the ISO format (that's because of time zones, on that, later on)
+console.log("Date from parts:", dateFromParts); // You might notice it might actually be a bit differnet then the ISO format (that's because of time zones)
 
 
 //
@@ -170,6 +170,9 @@ console.log("Sample date Seconds:", seconds);
 // Getting milliseconds
 const milliseconds = sampleDate.getMilliseconds(); // Milliseconds (0-999)
 console.log("Sample date Milliseconds:", milliseconds);
+// Getting timestamp
+const sampleTimestamp = sampleDate.getTime(); // Number of milliseconds since Unix Epoch
+console.log("Sample date Timestamp (ms since Unix Epoch):", sampleTimestamp);
 
 /* Setting parts of the date */
 
@@ -196,7 +199,38 @@ console.log("Sample date after setting Seconds to 0 UTC:", sampleDate);
 // Setting milliseconds
 sampleDate.setMilliseconds(500); // Sets the milliseconds to 500
 console.log("Sample date after setting Milliseconds to 500 UTC:", sampleDate);
+// Setting timestamp (basically overwrites the whole date)
+sampleDate.setTime(1321632042333); // Sets the timestamp to the given value
+console.log("Sample date after setting Timestamp UTC:", sampleDate);
+
+/* Date math - AKA how to calculate with dates */
+const anotherDate = new Date("2023-01-31T00:00:00Z"); // January 31, 2023
+anotherDate.setDate(anotherDate.getDate() + 5); // Add 5 days
+console.log("Another date after adding 5 days UTC:", anotherDate); // It correctly rolls over to February - we don't need to worry about that
+// It also works with hours
+anotherDate.setHours(anotherDate.getHours() + 48); // Add 48 hours (2 days)
+console.log("Another date after adding 48 hours UTC:", anotherDate); // It correctly rolls over the days
 
 
+//
+// Date calculation - how to calculate differences between dates
+//
 
+// Now we have also acquired knowledge regarding Date methods
+// But, in case when we have two dates, how to get their difference?
+// For example, how many days are between two dates?
 
+const startDate = new Date("1939-09-01T00:00:00Z"); //September 1, 1939
+console.log("Start Date UTC:", startDate);
+const endDate = new Date("1945-05-08T00:00:00Z"); // May 8, 1945
+console.log("End Date UTC:", endDate);
+// Get both dates as timestamps and subtract them to get the difference in milliseconds
+const differenceInMilliseconds = endDate.getTime() - startDate.getTime(); 
+console.log("Difference in milliseconds:", differenceInMilliseconds);
+// We can then calculate the difference in days
+const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
+const differenceInDays = differenceInMilliseconds / MILLISECONDS_IN_A_DAY;
+console.log("Difference in days:", differenceInDays);
+
+// And this is how we can get difference between two dates - we need to use the timestamps, calculate the difference
+// We then need to convert the timestamp to our desired difference - like to days, hours, minutes, etc.
