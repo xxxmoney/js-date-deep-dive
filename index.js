@@ -47,10 +47,10 @@ console.log("Date from timestamp:", dateFromTimestamp);
 // - With this, we can "combine" these parts to create different formats, for example: "YYYY-MM-DD", "MM/DD/YYYY", "YYYY-MM-DDThh:mm:ss" (T is just the separator, Z means UTC time zone - on this later on), etc.
 // My recommandation is the ISO 8601 format - YYYY-MM-DDThh:mm:ssZ
 const dateFromISOString = new Date("2001-11-09T14:46:00Z");
-console.log("Date from ISO string:", dateFromISOString);
+console.log("Date from ISO string UTC:", dateFromISOString);
 // There is also the ISO 8601 date only format - YYYY-MM-DD - specified without time - uses midnight (00:00) as time
 const dateOnlyFromISOString = new Date("2021-11-09"); // This is treated similarly to the previous one, but it also has its caveats, to rather use the first one
-console.log("Date from unreliable YYYY-MM-DD string:", dateOnlyFromISOString);
+console.log("Date from YYYY-MM-DD string UTC:", dateOnlyFromISOString);
 // There are also other formats which may or may not work across browsers, for example YYYY-MM-DD, MM/DD/YYYY, etc.
 const dateFromUnreliableFormatString = new Date("11/09/2021"); // This one for example is not treated same as the ISO 8601 formats
 console.log("Date from another unreliable MM/DD/YYYY string:", dateFromUnreliableFormatString);
@@ -58,6 +58,52 @@ console.log("Date from another unreliable MM/DD/YYYY string:", dateFromUnreliabl
 // 4: Creating a Date from individual parts
 // - A great option - specifies the parts specifically
 const dateFromParts = new Date(2001, 10, 9, 14, 46, 0); // Year, Month, Day, Hour, Minute, Second. Note: Month is zero-based! (0 = January, 10 = November)
-console.log("Date from parts:", dateFromParts);
+console.log("Date from parts:", dateFromParts); // You might notice it might actually be a bit differnet then the ISO format (that's because of time zones, on that, later on)
 
+
+//
+// The Caveats, Pitfalls and bad stuff of Date
+//
+
+/* The 0 indexed month */
+
+// As mentioned already, Date can be created with multiple parameters passed to the constructor
+// For year, month, day, hour, minute, second, millisecond
+
+// In the example above, we created a Date for November 9, 2001, 14:46:00
+new Date(2001, 10, 9, 14, 46, 0); // But why do we use 10 for month?
+// Because month is zero-based! (0 = January, 10 = November) - as mentioned above
+// It's important to remember this
+
+// So if wanted to create a Date for December 24, 2022, we would do:
+const christmas2022 = new Date(2022, 11, 24); // 11 for December
+console.log("Christmas 2022:", christmas2022);
+
+/* Mutability and copying */
+
+// Date object is mutable - meaning if we alter it with some methods, it changes the original object
+// This might not be desirable sometimes - for example in C#, the methods usually craete a new date object
+
+// Alas, we are in JavaScript - we will look through the methods more in detail later
+// But let's look at this simple example
+
+const originalDate = new Date("2001-11-09T14:46:00Z"); // January 1, 2022
+console.log("Original date before mutation UTC:", originalDate);
+
+const linkToOriginal = originalDate; // This is a reference to the original date
+
+// Now, let's say we want to add 2 years to this date
+linkToOriginal.setFullYear(linkToOriginal.getFullYear() + 2); // This mutates the original date object
+console.log("Original date after mutation (added 2 years) UTC:", originalDate); // The original date is now changed
+// This behavior might not be expected or wanted, so keep it in mind
+
+// We can do the "fix" ourselves - we can create a new instance instead of using a reference
+// Remember how the Date object is just a timestamp in miliseconds?
+// We can just get this timestamp and create new date with it!
+const anotherOriginalDate = new Date("2001-11-09T14:46:00Z");
+const copyOfAnotherOriginalDate = new Date(anotherOriginalDate.getTime()); // .getTime gets the timestamp, and with the consturctor, we create a new date with the same value
+const copyOfAnotherOriginalDateShorter = new Date(anotherOriginalDate); // This would also work - it would convert the date to timestamp
+anotherOriginalDate.setFullYear(anotherOriginalDate.getFullYear() + 2); // Mutate the original date
+console.log("Copy of another original date UTC:", copyOfAnotherOriginalDate); // And this stays the same because it's a new instance
+console.log("Copy of another original date (short creation version) UTC:", copyOfAnotherOriginalDateShorter); 
 
